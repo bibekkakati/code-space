@@ -1,13 +1,53 @@
+:root {
+	--bgColor: #282c34;
+	--primaryColor: #0042c7;
+	--textColor: #eeeeee;
+	--barColor: #1d2229;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+		"Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+		"Helvetica Neue", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	height: 100vh;
+	width: 100vw;
+	background-color: var(--bgColor);
+	font-size: 16px;
+	color: var(--textColor);
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+		monospace;
+}
+
+/* width */
+::-webkit-scrollbar {
+	width: 12px;
+	height: 12px;
+	padding: 0;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #75757550;
+	min-height: 50px;
+	height: 50px;
+	border-radius: 15px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #75757575;
 }

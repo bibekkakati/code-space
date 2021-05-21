@@ -1,0 +1,18 @@
+.editor {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+}
+
+.aceEditor {
+	flex: 1;
+	height: auto;
+	width: 100%;
+}
+
+.bottomBar {
+	height: 25px;
+	width: 100%;
+	background-color: var(--barColor);
+}

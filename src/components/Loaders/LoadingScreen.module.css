@@ -1,0 +1,31 @@
+.main {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	-webkit-animation: fadeinout 2s infinite forwards;
+	animation: fadeinout 2s infinite forwards;
+	opacity: 0.5;
+}
+
+.text {
+	color: var(--textColor);
+	font-size: 18px;
+	font-weight: 600;
+}
+
+@-webkit-keyframes fadeinout {
+	50% {
+		opacity: 0.7;
+	}
+}
+
+@keyframes fadeinout {
+	50% {
+		opacity: 0.7;
+	}
+}

@@ -1,0 +1,31 @@
+.main {
+	width: 100vw;
+	height: 100vh;
+	background-color: var(--bgColor);
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.titleBar {
+	height: 25px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 2px;
+	background-color: var(--barColor);
+}
+
+.title {
+	color: var(--textColor);
+	font-size: 0.7rem;
+	font-weight: 600;
+	letter-spacing: 1px;
+}
+
+.editor {
+	flex: 1;
+	height: 100%;
+	width: 100%;
+}
