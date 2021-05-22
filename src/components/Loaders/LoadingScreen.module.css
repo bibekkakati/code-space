@@ -1,11 +1,14 @@
 .main {
+	position: relative;
+	top: 0;
+	left: 0;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	padding: 0;
 	margin: 0;
-	width: 100%;
+	width: 100;
 	height: 100%;
 	-webkit-animation: fadeinout 2s infinite forwards;
 	animation: fadeinout 2s infinite forwards;

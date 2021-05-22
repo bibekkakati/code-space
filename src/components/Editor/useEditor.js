@@ -1,23 +1,26 @@
 import { beautify } from "ace-builds/src-noconflict/ext-beautify";
 import { useRef, useState } from "react";
-import { useParams } from "react-router";
-import { JAVASCRIPT_MODE } from "../../constants/Modes";
+import { useHistory, useParams } from "react-router";
+import { JAVASCRIPT_MODE, PLAIN_TEXT_MODE } from "../../constants/Modes";
 import { CURSOR_POS } from "../../constants/CodeSpaceActions";
 import {
+	deleteCodeSpace_Action,
 	getCodeSpace,
 	listenOnCodeSpace,
 	listenOnCodeSpaceAction,
 	updateCodeSpaceAction,
 	updateCodeSpaceCode,
-	updateCodeSpaceMode,
 } from "../../firebase/actions";
 import getUserId from "../../helpers/getUserId";
-import debounce from "../../helpers/debounce";
+import debounce from "lodash/debounce";
+import { Range } from "ace-builds";
 
 export const useEditor = ({ setCursorPosition, setMode, mode }) => {
+	const history = useHistory();
 	const params = useParams();
 	const editorRef = useRef();
 	const [loading, setLoading] = useState(true);
+	const [sameUser, setSameUser] = useState(false);
 
 	const onEditorLoad = (editor) => {
 		// Change editor style
@@ -26,6 +29,7 @@ export const useEditor = ({ setCursorPosition, setMode, mode }) => {
 	};
 
 	const onCodeChange = async (code) => {
+		if (!sameUser) return;
 		try {
 			await updateCodeSpaceCode(params.csId, code);
 		} catch (error) {
@@ -33,6 +37,7 @@ export const useEditor = ({ setCursorPosition, setMode, mode }) => {
 		}
 	};
 
+	let onCursorChangeDebounce;
 	const onCursorChange = async (selection) => {
 		const { row, column } = selection.cursor;
 		// Set cursor position state
@@ -46,14 +51,18 @@ export const useEditor = ({ setCursorPosition, setMode, mode }) => {
 		if (start.row === row && start.column === column) {
 			reverse = true;
 		}
-		debounce(async () => {
+		if (!sameUser) return;
+		const actionData = {
+			type: CURSOR_POS,
+			start,
+			end,
+			reverse,
+		};
+
+		if (onCursorChangeDebounce) onCursorChangeDebounce.cancel();
+		onCursorChangeDebounce = debounce(async function () {
 			try {
-				await updateCodeSpaceAction(params.csId, {
-					type: CURSOR_POS,
-					start,
-					end,
-					reverse,
-				});
+				await updateCodeSpaceAction(params.csId, actionData);
 			} catch (error) {
 				console.error(
 					"onCursorChange > updateCodeSpaceAction:",
@@ -61,6 +70,7 @@ export const useEditor = ({ setCursorPosition, setMode, mode }) => {
 				);
 			}
 		}, 500);
+		onCursorChangeDebounce();
 	};
 
 	const setSelectionRange = (start, end, reverse = false) => {
@@ -69,6 +79,7 @@ export const useEditor = ({ setCursorPosition, setMode, mode }) => {
 			new Range(start.row, start.column, end.row, end.column),
 			reverse
 		);
+		// editorRef.current.editor.scrollToLine(start.row, false, true);
 	};
 
 	const onChange_CodeSpaceAction = (snap) => {
@@ -88,45 +99,63 @@ export const useEditor = ({ setCursorPosition, setMode, mode }) => {
 	};
 
 	const onChange_CodeSpace = (snap) => {
-		const data = snap.val();
-		if (data) {
-			const { code, mode } = data;
-			if (code) {
+		const value = snap.val();
+		switch (snap.key) {
+			case "code":
+				const code = value || "";
 				editorRef.current.editor.setValue(code);
-			}
-			if (mode) {
-				editorRef.current.editor.setValue(mode);
-			}
-		} else {
-			console.error("onChange_CodeSpace: Not data in snapshot");
+				editorRef.current.editor.getSelection().clearSelection();
+				break;
+			case "mode":
+				const m = value || PLAIN_TEXT_MODE;
+				setMode(m);
+				break;
+			default:
+				return;
 		}
 	};
 
 	const initializeCodeSpace = (snap) => {
 		const data = snap.val();
 		if (data) {
+			const createdAt = new Date(data.timestamp);
+			const currentTime = new Date();
+			const timeLimit = 48;
+			// Check if link is expired (> 48 hours)
+			const expired =
+				(currentTime.getTime() - createdAt.getTime()) /
+					(1000 * 60 * 60) >
+				timeLimit;
+			if (expired) {
+				deleteCodeSpace_Action(params.csId);
+				history.replace("/");
+				return;
+			}
+			editorRef.current.editor.setValue(data.code || "");
+			editorRef.current.editor.getSelection().clearSelection();
+			if (data.mode) {
+				// Set the mode in state
+				setMode(data.mode);
+			}
 			const userId = getUserId();
 			if (userId === data.userId) {
+				setSameUser(true);
 				// If same user, then edit is allowed
 				editorRef.current.editor.setReadOnly(false);
-				editorRef.current.editor.setValue(data.code || "");
-				if (data.mode) {
-					// Set the mode in state
-					setMode(data.mode);
-				} else {
-					// Update the mode in firebase
-					updateCodeSpaceMode(params.csId, JAVASCRIPT_MODE);
-					setMode(JAVASCRIPT_MODE);
-				}
 			} else {
-				// If userid doesn't match that means it is a viewer and listen for changes
+				// If userid doesn't match that means view access only
+				editorRef.current.editor.setReadOnly(true);
+				// listen for changes in code space
 				listenOnCodeSpace(params.csId, onChange_CodeSpace);
 				listenOnCodeSpaceAction(params.csId, onChange_CodeSpaceAction);
 			}
+			setLoading(false);
+			return;
 		} else {
 			console.error("initializeCodeSpace: No data found in snapshot");
+			history.replace("/");
+			return;
 		}
-		setLoading(false);
 	};
 
 	const prettify = () => {

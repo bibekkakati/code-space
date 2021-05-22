@@ -1,4 +1,4 @@
-import { SET_CURSOR_POSITION } from "../../constants/ActionTypes";
+import { SET_CURSOR_POSITION } from "../../constants/StoreActionTypes";
 
 let initialState = {
 	row: 0,

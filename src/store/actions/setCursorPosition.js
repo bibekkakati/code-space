@@ -1,4 +1,4 @@
-import { SET_CURSOR_POSITION } from "../../constants/ActionTypes";
+import { SET_CURSOR_POSITION } from "../../constants/StoreActionTypes";
 
 const setCursorPosition = (payload) => ({
 	type: SET_CURSOR_POSITION,

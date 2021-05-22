@@ -1,2 +1,3 @@
 export const SET_MODE = "SET_MODE";
 export const SET_CURSOR_POSITION = "SET_CURSOR_POSITION";
+export const SHOW_MODE_MENU = "SHOW_MODE_MENU";

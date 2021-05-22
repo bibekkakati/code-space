@@ -78,6 +78,15 @@ export const updateCodeSpaceAction = (csId, action = {}) => {
 	});
 };
 
+export const deleteCodeSpace_Action = (csId) => {
+	db.ref(CODE_SPACE + csId).remove((error) => {
+		if (error) console.error("deleteCodeSpace: ", error.message);
+	});
+	db.ref(CODE_SPACE_ACTION + csId).remove((error) => {
+		if (error) console.error("deleteCodeSpaceAction: ", error.message);
+	});
+};
+
 export const getCodeSpace = (csId, cb) => {
 	db.ref(CODE_SPACE + csId).once("value", cb);
 };

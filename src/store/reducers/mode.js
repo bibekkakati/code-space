@@ -1,6 +1,7 @@
-import { SET_MODE } from "../../constants/ActionTypes";
+import { SET_MODE } from "../../constants/StoreActionTypes";
+import { PLAIN_TEXT_MODE } from "../../constants/Modes";
 
-let initialState = {};
+let initialState = PLAIN_TEXT_MODE;
 
 const mode = (state = initialState, action) => {
 	switch (action.type) {
