@@ -3,11 +3,20 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
 	font-size: calc(10px + 2vmin);
 }
 
+.logo {
+	margin-top: 10vh;
+	filter: grayscale(90%);
+}
+
+.logo:hover {
+	filter: grayscale(80%);
+}
+
 .editorBtn {
+	margin-top: 50px;
 	font-size: 20px;
 	font-weight: 600;
 	letter-spacing: 1px;
@@ -20,6 +29,7 @@
 	text-align: center;
 	cursor: pointer;
 	text-decoration: none;
+	opacity: 0.8;
 }
 
 .editorBtn:hover {

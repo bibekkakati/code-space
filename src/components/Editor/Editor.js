@@ -35,6 +35,10 @@ const Editor = ({ mode, setCursorPosition, setMode }) => {
 
 	const fontSize = getCSFontSize();
 
+	const onSelectionChange = (sel) => {
+		console.log(sel);
+	};
+
 	return (
 		<Fragment>
 			{loading && <LoadingScreen text="Fetching Code Space ..." />}
@@ -53,6 +57,7 @@ const Editor = ({ mode, setCursorPosition, setMode }) => {
 						onChange={onCodeChange}
 						debounceChangePeriod={500}
 						onCursorChange={onCursorChange}
+						onSelection={onSelectionChange}
 						showPrintMargin={false}
 						showGutter={true}
 						highlightActiveLine={true}

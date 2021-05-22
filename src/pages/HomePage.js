@@ -27,6 +27,13 @@ export default function HomePage(props) {
 
 	return (
 		<div className={styles.main}>
+			<img
+				className={styles.logo}
+				src="/logo.png"
+				alt="Code Space Logo"
+				width="280px"
+				height="280px"
+			/>
 			<button className={styles.editorBtn} onClick={openEditor}>
 				Open Editor
 			</button>
