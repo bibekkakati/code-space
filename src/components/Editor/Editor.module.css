@@ -8,11 +8,17 @@
 .aceEditor {
 	flex: 1;
 	height: auto;
+	margin-bottom: 25px;
 	width: 100%;
 }
 
 .bottomBar {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
 	height: 25px;
 	width: 100%;
 	background-color: var(--barColor);
+	z-index: 10;
 }

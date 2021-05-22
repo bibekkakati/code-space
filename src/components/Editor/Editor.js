@@ -57,6 +57,7 @@ const Editor = ({ mode, setCursorPosition, setMode }) => {
 						showGutter={true}
 						highlightActiveLine={true}
 						focus={true}
+						wrapEnabled={true}
 						setOptions={{
 							enableBasicAutocompletion: false,
 							enableLiveAutocompletion: false,
